@@ -5,15 +5,21 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"sort"
 	"strings"
 
+	"github.com/kirsle/configdir"
 	"github.com/lithammer/fuzzysearch/fuzzy"
 	"github.com/spf13/pflag"
 )
 
+const progname = "wut"
+
+var defaultAcronymsFile = path.Join(configdir.LocalConfig(progname), "acronyms.json")
+
 var (
-	flagDefinitionsFile = pflag.StringP("definitions-file", "f", "acronyms.json", "JSON file containing the acronym definitions")
+	flagDefinitionsFile = pflag.StringP("definitions-file", "f", defaultAcronymsFile, "JSON file containing the acronym definitions")
 	flagMaxDistance     = pflag.UintP("max-distance", "d", 1, "Maximum Levenshtein distance for fuzzy matching when exact matching fails")
 )
 
