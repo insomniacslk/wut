@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/insomniacslk/wut"
 	"github.com/kirsle/configdir"
@@ -27,14 +28,16 @@ func main() {
 		log.Fatalf("No acronym specified")
 	}
 
-	defs, err := wut.Load(*flagDefinitionsFile, *flagMaxDistance)
+	allDefs, err := wut.Load(*flagDefinitionsFile, *flagMaxDistance)
 	if err != nil {
 		log.Fatalf("Failed to load acronyms: %v", err)
 	}
 
-	def, closeMatches := defs.Get(acronym)
-	if def != "" {
-		fmt.Println(def)
+	defs, closeMatches := allDefs.Get(acronym)
+	if defs != nil {
+		separator := strings.Repeat("-", 80)
+		output := strings.Join(defs, separator)
+		fmt.Println(output)
 		return
 	}
 	if len(closeMatches) > 0 {

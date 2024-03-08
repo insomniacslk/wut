@@ -10,7 +10,7 @@ import (
 	"github.com/lithammer/fuzzysearch/fuzzy"
 )
 
-type Defs map[string]string
+type Defs map[string][]string
 
 type Wut struct {
 	// TODO: support multiple definitions
@@ -24,14 +24,14 @@ type Wut struct {
 // Get returns an acronym's definition. If no exact match is found, it returns an empty
 // string, and a list of top results using fuzzy matching. This list can be empty if no
 // match is close enough.
-func (w *Wut) Get(acronym string) (string, []string) {
+func (w *Wut) Get(acronym string) ([]string, []string) {
 	def, ok := w.defs[acronym]
 	if ok {
 		return def, nil
 	}
 	if w.maxDistance == 0 {
 		// only exact-matching is requested
-		return "", nil
+		return nil, nil
 	}
 	// try fuzzy matching, this is slower because we iterate all the keys, plus
 	// the fuzzy matching itself.
@@ -43,7 +43,7 @@ func (w *Wut) Get(acronym string) (string, []string) {
 			closeMatches = append(closeMatches, m.Target)
 		}
 	}
-	return "", closeMatches
+	return nil, closeMatches
 }
 
 func Load(filename string, maxDistance uint) (*Wut, error) {
@@ -61,15 +61,11 @@ func Load(filename string, maxDistance uint) (*Wut, error) {
 	}
 	keys := make([]string, 0, len(defs))
 	for k, v := range tmp {
-		lk := strings.ToLower(k)
-		// ignore empty definitions
-		v = strings.TrimSpace(v)
-		if v == "" {
-			log.Printf("Ignoring empty definition for '%s'", k)
-			continue
-		}
 		// normalize the case so the match can be case-insensitive.
-		defs[lk] = v
+		lk := strings.ToLower(k)
+		for _, def := range v {
+			defs[lk] = append(defs[lk], strings.TrimSpace(def))
+		}
 		// get all the keys in a slice to do fuzzy matching if necessary.
 		keys = append(keys, lk)
 	}
