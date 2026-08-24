@@ -1,7 +1,7 @@
 package wut
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"sort"
 	"strings"
@@ -13,7 +13,7 @@ import (
 type Defs map[string][]string
 
 type Wut struct {
-	// TODO: support multiple definitions
+	// acronym -> definitions, with lowercase keys
 	defs Defs
 	// used to do fuzzy matching
 	acronyms []string
@@ -49,7 +49,7 @@ func (w *Wut) Get(acronym string) ([]string, []string) {
 func Load(filename string, maxDistance uint) (*Wut, error) {
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		log.Fatalf("Failed to read definitions file: %v", err)
+		return nil, fmt.Errorf("failed to read definitions file: %w", err)
 	}
 
 	var (
@@ -57,7 +57,7 @@ func Load(filename string, maxDistance uint) (*Wut, error) {
 		defs = make(Defs)
 	)
 	if err := yaml.Unmarshal(data, &tmp); err != nil {
-		log.Fatalf("Failed to unmarshal YAML file: %v", err)
+		return nil, fmt.Errorf("failed to unmarshal YAML file: %w", err)
 	}
 	keys := make([]string, 0, len(defs))
 	for k, v := range tmp {
