@@ -21,10 +21,13 @@ type Wut struct {
 	maxDistance uint
 }
 
-// Get returns an acronym's definition. If no exact match is found, it returns an empty
-// string, and a list of top results using fuzzy matching. This list can be empty if no
-// match is close enough.
+// Get returns an acronym's definitions. The lookup is case-insensitive. If no exact
+// match is found, it returns no definitions, and a list of top results using fuzzy
+// matching. This list can be empty if no match is close enough.
 func (w *Wut) Get(acronym string) ([]string, []string) {
+	// definitions are stored with lowercase keys, so normalize the case here to
+	// make both the exact and the fuzzy lookup case-insensitive.
+	acronym = strings.ToLower(acronym)
 	def, ok := w.defs[acronym]
 	if ok {
 		return def, nil
