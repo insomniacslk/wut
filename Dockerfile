@@ -9,6 +9,6 @@ ADD . .
 
 RUN cd cmd/wut && go build
 RUN mv cmd/wut/wut /app
-RUN mv cmd/wut/acronyms.json.example /app/acronyms.json
+RUN mv cmd/wut/acronyms.yml.example /app/acronyms.yml
 
-ENTRYPOINT ["/app/wut", "-f", "/app/acronyms.json"]
+ENTRYPOINT ["/app/wut", "-f", "/app/acronyms.yml"]

@@ -1,13 +1,13 @@
 package wut
 
 import (
-	"encoding/json"
 	"log"
 	"os"
 	"sort"
 	"strings"
 
 	"github.com/lithammer/fuzzysearch/fuzzy"
+	"gopkg.in/yaml.v3"
 )
 
 type Defs map[string][]string
@@ -56,8 +56,8 @@ func Load(filename string, maxDistance uint) (*Wut, error) {
 		tmp  Defs
 		defs = make(Defs)
 	)
-	if err := json.Unmarshal(data, &tmp); err != nil {
-		log.Fatalf("Failed to unmarshal JSON file: %v", err)
+	if err := yaml.Unmarshal(data, &tmp); err != nil {
+		log.Fatalf("Failed to unmarshal YAML file: %v", err)
 	}
 	keys := make([]string, 0, len(defs))
 	for k, v := range tmp {

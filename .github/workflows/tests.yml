@@ -21,7 +21,7 @@ jobs:
       - run: |
           cd $GITHUB_WORKSPACE/src/github.com/${{ github.repository }}/cmd/wut
           go build
-          ./wut -f acronyms.json.example wut | grep "internet slang"
+          ./wut -f acronyms.yml.example wut | grep "internet slang"
   test:
     runs-on: golang:latest
     steps:
