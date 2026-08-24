@@ -35,7 +35,7 @@ func main() {
 
 	defs, closeMatches := allDefs.Get(acronym)
 	if defs != nil {
-		separator := strings.Repeat("-", 80)
+		separator := "\n" + strings.Repeat("-", 80) + "\n"
 		output := strings.Join(defs, separator)
 		fmt.Println(output)
 		return
